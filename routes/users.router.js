@@ -1,7 +1,7 @@
 const express = require('express');
-const faker = require('faker');
+const UserService = require('./../services/user.service');
 const router = express.Router();
-
+const service = new UserService();
 //parametros tipo query
 /**
  * listar los usuarios por paginacion
@@ -11,15 +11,7 @@ const router = express.Router();
  * param size = paginacion usuarios
  */
 router.get('/', (req, res) => {
-  const users = [];
-  const { size } = req.query;
-  const limit = size || 5;
-  for (let i = 0; i < limit; i++) {
-    users.push({
-      username: faker.name.firstName(),
-      phone: parseInt(faker.phone.phoneNumber())
-    });
-  }
+  const users = service.findAll();
   res.json(users);
 });
 /**
@@ -29,16 +21,8 @@ router.get('/', (req, res) => {
  */
 router.get('/:id', (req, res) => {
   const {id} = req.params;
-  if (id == 999) {
-    res.status(404).json({
-      message: 'No existe',
-    });
-  }
-  res.status(201).json({
-    id,
-    name: 'usuario',
-    price: 2000
-  });
+  const product = service.findOne(id);
+  res.status(201).json(product);
 });
 /**
  * Crear Usuario

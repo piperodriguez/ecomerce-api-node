@@ -1,6 +1,7 @@
 const express = require('express');
-const faker = require('faker');
+const ProductsService= require('./../services/product.service');
 const router = express.Router();
+const service = new ProductsService();
 /**
  * Peticion que lista los productos
  * permite paginar los elementos mostrados en pantalla
@@ -9,32 +10,18 @@ const router = express.Router();
  * http://localhost:3000/products?size=1
  */
  router.get('/', (req, res) => {
-  const products = [];
-  /**
-   * para recibir parametros, si viene o valor por defecto
-   */
-  const { size } = req.query;
-  const limit = size || 10;
-  for (let i = 0; i < limit; i++) {
-    products.push({
-      name: faker.commerce.productName(),
-      price: parseInt(faker.commerce.price(), 10),
-      image: faker.image.imageUrl()
-    });
-  }
+  const products = service.findAll();
   res.json(products);
 });
 
 //nuevo endpoint
 //http://localhost:3000/products/11
+//http://localhost:3000/api/v1/products/4ab5cb4f-bae4-416c-872f-11ff50e97b52
 
 router.get('/:id', (req, res) => {
   const {id} = req.params;
-  res.json({
-    id,
-    name: 'Prodicto1',
-    price: 2000
-  });
+  const product = service.findOne(id);
+  res.json(product);
 });
 
 /**
