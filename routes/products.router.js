@@ -37,4 +37,46 @@ router.get('/:id', (req, res) => {
   });
 });
 
+/**
+ * ruta put para actualizar todo el producto
+ * necesita todos los valores del objeto
+ */
+
+/**
+ * ruta para actualizar un valor del producto
+ * valores atirbutos seleccionados
+ */
+ router.patch('/:id', (req, res) => {
+  const {id} = req.params;
+  const body = req.body;
+  res.json({
+    id,
+    data: body,
+    message: 'producto actualzado',
+  });
+});
+
+/**
+ * crear producto
+ */
+
+router.post('/', (req, res) => {
+  const body = req.body;
+  res.json({
+    message: 'created',
+    data: body
+  });
+});
+
+/**
+ * eliminar producto
+ */
+
+ router.delete('/:id', (req, res) => {
+  const {id} = req.params;
+  res.json({
+    id,
+    message: 'producto eliminado',
+  });
+});
 module.exports = router;
