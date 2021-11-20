@@ -4,7 +4,7 @@ const router = express.Router();
 
 //parametros tipo query
 /**
- * listar los usuarios
+ * listar los usuarios por paginacion
  * endpoints
  * no hay paramatros http://localhost:3000/users
  * http://localhost:3000/v1/users?size=3
@@ -22,7 +22,24 @@ router.get('/', (req, res) => {
   }
   res.json(users);
 });
-
+/**
+ * Buscar un usuario
+ * enviamos cod http 201 de creado
+ * simular que no existe
+ */
+router.get('/:id', (req, res) => {
+  const {id} = req.params;
+  if (id == 999) {
+    res.status(404).json({
+      message: 'No existe',
+    });
+  }
+  res.status(201).json({
+    id,
+    name: 'usuario',
+    price: 2000
+  });
+});
 /**
  * Crear Usuario
  */
