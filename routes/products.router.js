@@ -25,10 +25,14 @@ router.get('/:id', (req, res) => {
 });
 
 /**
- * ruta put para actualizar todo el producto
- * necesita todos los valores del objeto
+ * crear producto
  */
 
+router.post('/', (req, res) => {
+  const body = req.body;
+  const newProduct = service.create(body);
+  res.json(newProduct);
+});
 /**
  * ruta para actualizar un valor del producto
  * valores atirbutos seleccionados
@@ -36,24 +40,10 @@ router.get('/:id', (req, res) => {
  router.patch('/:id', (req, res) => {
   const {id} = req.params;
   const body = req.body;
-  res.json({
-    id,
-    data: body,
-    message: 'producto actualzado',
-  });
+  const producto = service.update(id, body);
+  res.json(producto);
 });
 
-/**
- * crear producto
- */
-
-router.post('/', (req, res) => {
-  const body = req.body;
-  res.json({
-    message: 'created',
-    data: body
-  });
-});
 
 /**
  * eliminar producto
@@ -61,9 +51,7 @@ router.post('/', (req, res) => {
 
  router.delete('/:id', (req, res) => {
   const {id} = req.params;
-  res.json({
-    id,
-    message: 'producto eliminado',
-  });
+  const eliminar = service.delete(id);
+  res.json(eliminar);
 });
 module.exports = router;

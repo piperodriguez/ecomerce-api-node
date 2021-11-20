@@ -42,15 +42,34 @@ class UserService{
   findOne(id){
     return this.users.find(item => item.id === id);
   }
-  create(){
-
+  create(data){
+    const newUser = {
+      id: faker.datatype.uuid(),
+      ...data
+    };
+    this.users.push(newUser);
+    return newUser;
   }
 
-  update(){
-
+  update(id, cambios){
+    const posicion = this.users.findIndex(item => item.id === id);
+    if (posicion === -1) {
+      throw new Error('Usuario no encontrado');
+    }
+    const usuario = this.users[posicion];
+    this.users[posicion] = {
+      ...usuario,
+      ...cambios
+    };
+    return this.users[posicion];
   }
-  delete(){
-
+  delete(id){
+    const posicion = this.users.findIndex(item => item.id === id);
+    if (posicion === -1) {
+      throw new Error('Usuario no encontrado');
+    }
+    this.users.splice(posicion, 1);
+    return id;
   }
 }
 

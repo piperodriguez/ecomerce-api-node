@@ -29,10 +29,8 @@ router.get('/:id', (req, res) => {
  */
  router.post('/', (req, res) => {
   const body = req.body;
-  res.json({
-    message: 'created',
-    data: body
-  });
+  const newUser = service.create(body);
+  res.json(newUser);
 });
 
 /**
@@ -42,11 +40,8 @@ router.get('/:id', (req, res) => {
  router.patch('/:id', (req, res) => {
   const {id} = req.params;
   const body = req.body;
-  res.json({
-    id,
-    data: body,
-    message: 'Usuario actualzado',
-  });
+  const user = service.update(id, body);
+  res.json(user);
 });
 
 
@@ -55,10 +50,7 @@ router.get('/:id', (req, res) => {
  */
  router.delete('/:id', (req, res) => {
   const {id} = req.params;
-  res.json({
-    id,
-    message: 'Usuario eliminado',
-  });
+  const eliminar = service.delete(id);
+  res.json(eliminar);
 });
-
 module.exports = router;

@@ -43,15 +43,35 @@ class ProductsService{
   findOne(id){
     return this.products.find(item => item.id === id);
   }
-  create(){
-
+  create(data){
+    const newProduct = {
+      id: faker.datatype.uuid(),
+      ...data
+    };
+    this.products.push(newProduct);
+    return newProduct;
   }
 
-  update(){
-
+  update(id, cambios){
+    //buscmaos la posicion en el array
+    const posicion = this.products.findIndex(item => item.id === id);
+    if (posicion === -1) {
+      throw new Error('Producto no encontrado');
+    }
+    const producto = this.products[posicion];
+    this.products[posicion] = {
+      ...producto,
+      ...cambios
+    };
+    return this.products[posicion];
   }
-  delete(){
-
+  delete(id){
+    const posicion = this.products.findIndex(item => item.id === id);
+    if (posicion === -1) {
+      throw new Error('Producto no encontrado');
+    }
+    this.products.splice(posicion, 1);
+    return id;
   }
 }
 
