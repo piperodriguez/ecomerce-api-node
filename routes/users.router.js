@@ -1,5 +1,7 @@
 const express = require('express');
 const UserService = require('./../services/user.service');
+const validatorHandler= require('./../middlewares/validator.handler');
+const { createUserValidate, updateUserValidate, getUserValidate } = require('./../validator/user.validator');
 const router = express.Router();
 const service = new UserService();
 //parametros tipo query
@@ -10,46 +12,64 @@ const service = new UserService();
  * http://localhost:3000/v1/users?size=3
  * param size = paginacion usuarios
  */
-router.get('/', async(req, res) => {
-  const users = await service.findAll();
-  res.json(users);
+router.get('/',async(req, res) => {
+    const users = await service.findAll();
+    res.json(users);
 });
 /**
  * Buscar un usuario
  * enviamos cod http 201 de creado
  * simular que no existe
  */
-router.get('/:id', async(req, res) => {
-  const {id} = req.params;
-  const product = await service.findOne(id);
-  res.status(200).json(product);
-});
+router.get('/:id',
+  validatorHandler(getUserValidate, ''),
+  async(req, res, next) => {
+    try {
+      const {id} = req.params;
+      const product = await service.findOne(id);
+      res.status(200).json(product);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 /**
  * Crear Usuario
  */
- router.post('/', async(req, res) => {
-   const body = req.body;
-   const newUser = await service.create(body);
-   res.json(newUser);
-});
+router.post('/',
+  validatorHandler(createUserValidate, 'body'),
+  async(req, res, next) => {
+    try {
+      const body = req.body;
+      const newUser = await service.create(body);
+      res.json(newUser);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 /**
  * Modificar Usuariosa
  */
 
- router.patch('/:id', async(req, res) => {
-   try {
-    const {id} = req.params;
-    const body = req.body;
-    const user = await service.update(id, body);
-    res.status(200).json(user);
+router.patch('/:id',
+  validatorHandler(getUserValidate, 'params'),
+  validatorHandler(updateUserValidate, 'body'),
+  async(req, res, next) => {
+    try {
+      const {id} = req.params;
+      const body = req.body;
+      const user = await service.update(id, body);
+      res.status(200).json(user);
 
-  } catch (error) {
-    res.status(400).json({
-      message: error.message
-    });
+    } catch (error) {
+
+      next(error);
+
+    }
   }
-});
+);
 
 
 /**
