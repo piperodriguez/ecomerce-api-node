@@ -5,7 +5,7 @@ const routerApi = require('./routes');
 //importante middleware
 const {logErros, errorHandler, boomErrorHandler} = require('./middlewares/error.handler');
 const app = express();
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 /**
  * defino middleware para entregar
  * datos en formato json
@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000
 app.use(express.json());
 //habilitar a cualquier dominio OJO !!!! peligroso si es publica si si no mmmmmmmmmmmm
 //definamos quienes pueden realizar peticiones tienen permiso de ahcer request
-const whiteHost = ['file:///Users/frodriguez/Documents/dev/chatBots/RestApi/cursoBackendNodejsApiRest/appPeticionCliente/index.html', 'https://totumaexpress.com'];
+const whiteHost = ['https://infinite-chamber-27315.herokuapp.com/', 'https://totumaexpress.com'];
 const options = {
   origin: (origin, callback)=>{
     //verifico contra mi lista blanca, si la peticion es aceptable
