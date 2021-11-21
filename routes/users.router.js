@@ -10,8 +10,8 @@ const service = new UserService();
  * http://localhost:3000/v1/users?size=3
  * param size = paginacion usuarios
  */
-router.get('/', (req, res) => {
-  const users = service.findAll();
+router.get('/', async(req, res) => {
+  const users = await service.findAll();
   res.json(users);
 });
 /**
@@ -19,38 +19,51 @@ router.get('/', (req, res) => {
  * enviamos cod http 201 de creado
  * simular que no existe
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async(req, res) => {
   const {id} = req.params;
-  const product = service.findOne(id);
-  res.status(201).json(product);
+  const product = await service.findOne(id);
+  res.status(200).json(product);
 });
 /**
  * Crear Usuario
  */
- router.post('/', (req, res) => {
-  const body = req.body;
-  const newUser = service.create(body);
-  res.json(newUser);
+ router.post('/', async(req, res) => {
+   const body = req.body;
+   const newUser = await service.create(body);
+   res.json(newUser);
 });
 
 /**
- * Modificar Usuarios
+ * Modificar Usuariosa
  */
 
- router.patch('/:id', (req, res) => {
-  const {id} = req.params;
-  const body = req.body;
-  const user = service.update(id, body);
-  res.json(user);
+ router.patch('/:id', async(req, res) => {
+   try {
+    const {id} = req.params;
+    const body = req.body;
+    const user = await service.update(id, body);
+    res.status(200).json(user);
+
+  } catch (error) {
+    res.status(400).json({
+      message: error.message
+    });
+  }
 });
 
 
 /**
  * Eliminar usuario
  */
- router.delete('/:id', (req, res) => {
-  const {id} = req.params;
-  const eliminar = service.delete(id);
-  res.json(eliminar);
+ router.delete('/:id', async (req, res) => {
+   try {
+     const {id} = req.params;
+     const eliminar = await service.delete(id);
+     res.status(204).json(eliminar);
+   } catch (error) {
+    res.status(400).json({
+      message: error.message
+    });
+   }
 });
 module.exports = router;

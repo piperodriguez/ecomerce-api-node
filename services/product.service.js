@@ -16,7 +16,7 @@ class ProductsService{
    * metodo index
    * lista los productos
    */
-  index(){
+  async index(){
     const cantProduct = 100;
     for (let i = 0; i < cantProduct; i++) {
       this.products.push({
@@ -33,7 +33,7 @@ class ProductsService{
    * el array de productos
    * solo retorna
    */
-  findAll(){
+  async findAll(){
     return this.products;
   }
   /**
@@ -43,7 +43,7 @@ class ProductsService{
   findOne(id){
     return this.products.find(item => item.id === id);
   }
-  create(data){
+  async create(data){
     const newProduct = {
       id: faker.datatype.uuid(),
       ...data
@@ -52,7 +52,7 @@ class ProductsService{
     return newProduct;
   }
 
-  update(id, cambios){
+  async update(id, cambios){
     //buscmaos la posicion en el array
     const posicion = this.products.findIndex(item => item.id === id);
     if (posicion === -1) {
@@ -65,7 +65,7 @@ class ProductsService{
     };
     return this.products[posicion];
   }
-  delete(id){
+  async delete(id){
     const posicion = this.products.findIndex(item => item.id === id);
     if (posicion === -1) {
       throw new Error('Producto no encontrado');

@@ -16,7 +16,7 @@ class UserService{
    * metodo index
    * lista los productos
    */
-  index(){
+  async index(){
     const cantUsuarios = 100;
     for (let i = 0; i < cantUsuarios; i++) {
       this.users.push({
@@ -33,15 +33,24 @@ class UserService{
    * solo retorna
    */
   findAll(){
-    return this.users;
+    return new Promise((resolve, reject) =>{
+      setTimeout(() => {
+        resolve(this.users);
+      }, 4500);
+    }, 2000);
   }
   /**
    * buscar elemento dentro del array
    * @param {*} id
    */
-  findOne(id){
+  async findOne(id){
     return this.users.find(item => item.id === id);
   }
+  /**
+   * Funcion crear usuario
+   * @param {*} data
+   * @returns
+   */
   create(data){
     const newUser = {
       id: faker.datatype.uuid(),
@@ -49,9 +58,10 @@ class UserService{
     };
     this.users.push(newUser);
     return newUser;
+
   }
 
-  update(id, cambios){
+  async update(id, cambios){
     const posicion = this.users.findIndex(item => item.id === id);
     if (posicion === -1) {
       throw new Error('Usuario no encontrado');
@@ -63,7 +73,7 @@ class UserService{
     };
     return this.users[posicion];
   }
-  delete(id){
+  async delete(id){
     const posicion = this.users.findIndex(item => item.id === id);
     if (posicion === -1) {
       throw new Error('Usuario no encontrado');
