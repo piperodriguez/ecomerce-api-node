@@ -5,7 +5,7 @@ const routerApi = require('./routes');
 //importante middleware
 const {logErros, errorHandler, boomErrorHandler} = require('./middlewares/error.handler');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000
 /**
  * defino middleware para entregar
  * datos en formato json
@@ -13,18 +13,18 @@ const port = 3000;
 app.use(express.json());
 //habilitar a cualquier dominio OJO !!!! peligroso si es publica si si no mmmmmmmmmmmm
 //definamos quienes pueden realizar peticiones tienen permiso de ahcer request
-const whiteHost = ['http://localhost:3000/api/v1/','file:///Users/frodriguez/Documents/dev/chatBots/RestApi/cursoBackendNodejsApiRest/appPeticionCliente/index.html', 'https://totumaexpress.com'];
+const whiteHost = ['file:///Users/frodriguez/Documents/dev/chatBots/RestApi/cursoBackendNodejsApiRest/appPeticionCliente/index.html', 'https://totumaexpress.com'];
 const options = {
-  origin: (url, callback)=>{
+  origin: (origin, callback)=>{
     //verifico contra mi lista blanca, si la peticion es aceptable
-    if (whiteHost.includes(url)) {
+    if (whiteHost.includes(origin) || !origin) {
       callback(null, true);
     } else {
       callback(new Error('No permitido'));
     }
   }
 }
-app.use(cors());
+app.use(cors(options));
 
 app.get('/', (req, res) => {
   res.send('Servidor ejecutandose en express');
