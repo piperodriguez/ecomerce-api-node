@@ -2,7 +2,7 @@ const express = require('express');
 //importamos faker para crear datos random
 const routerApi = require('./routes');
 //importante middleware
-const {logErros, errorHandler} = require('./middlewares/error.handler');
+const {logErros, errorHandler, boomErrorHandler} = require('./middlewares/error.handler');
 const app = express();
 const port = 3000;
 /**
@@ -21,6 +21,7 @@ routerApi(app);
 //llamado de middlewares
 
 app.use(logErros);
+app.use(boomErrorHandler);
 app.use(errorHandler);
 
 app.listen(port, ()=>{

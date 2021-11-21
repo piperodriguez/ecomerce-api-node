@@ -41,11 +41,15 @@ router.post('/', async (req, res) => {
  * ruta para actualizar un valor del producto
  * valores atirbutos seleccionados
  */
- router.patch('/:id', async (req, res) => {
-  const {id} = req.params;
-  const body = req.body;
-  const producto = await service.update(id, body);
-  res.json(producto);
+ router.patch('/:id', async (req, res, next) => {
+   try {
+     const {id} = req.params;
+     const body = req.body;
+     const producto = await service.update(id, body);
+     res.json(producto);
+   } catch (error) {
+     next(error);
+   }
 });
 
 

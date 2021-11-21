@@ -31,4 +31,18 @@ function errorHandler (err, req, res, next){
 }
 
 
-module.exports = {logErros, errorHandler}
+function boomErrorHandler (err, req, res, next){
+  /**
+   * como estamos trabajando con la dependencia de errores boom
+   * si en algun lado el error se definio usando boom
+   * se agrega la propiedad isBoom
+   * si existe lo identificamos.
+   */
+  if (err.isBoom) {
+    const { output } = err;
+    res.status(output.statusCode).json(output.payload);
+  }
+  next(err);
+}
+
+module.exports = {logErros, errorHandler, boomErrorHandler}

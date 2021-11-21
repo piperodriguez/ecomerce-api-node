@@ -1,5 +1,5 @@
 const faker = require('faker');
-
+const boom = require('@hapi/boom');
 
 /**
  * logica de negocio productosxe
@@ -23,7 +23,8 @@ class ProductsService{
         id: faker.datatype.uuid(),
         name: faker.commerce.productName(),
         price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl()
+        image: faker.image.imageUrl(),
+        mostrar: faker.datatype.boolean()
       });
     }
   }
@@ -41,7 +42,16 @@ class ProductsService{
    * @param {*} id
    */
   findOne(id){
-    return this.products.find(item => item.id === id);
+    const producto = this.products.find(item => item.id === id);
+    //validar la existencia del producto
+    if (!producto) {
+      throw boom.notFound("Producto no encontrado");
+    }
+    //validar el estado del producto 409
+    if (producto.mostrar === false) {
+      throw boom.conflict("No tiene acceso a este producto");
+    }
+    return producto;
   }
   async create(data){
     const newProduct = {
@@ -56,9 +66,13 @@ class ProductsService{
     //buscmaos la posicion en el array
     const posicion = this.products.findIndex(item => item.id === id);
     if (posicion === -1) {
-      throw new Error('Producto no encontrado');
+      throw boom.notFound("Producto no encontrado");
     }
     const producto = this.products[posicion];
+     //validar el estado del producto 409
+    if (producto.mostrar === false) {
+      throw boom.conflict("No tiene acceso a este producto");
+    }
     this.products[posicion] = {
       ...producto,
       ...cambios
@@ -68,7 +82,7 @@ class ProductsService{
   async delete(id){
     const posicion = this.products.findIndex(item => item.id === id);
     if (posicion === -1) {
-      throw new Error('Producto no encontrado');
+      throw boom.notFound("Producto no encontrado");
     }
     this.products.splice(posicion, 1);
     return id;
