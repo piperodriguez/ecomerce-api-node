@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=frodriguez
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=tiendavirtual
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'

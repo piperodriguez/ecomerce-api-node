@@ -1,6 +1,6 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
-
+const pool = require('../libs/postgres.pool');
 /**
  * logica de negocio productosxe
  */
@@ -11,6 +11,10 @@ class ProductsService{
     this.products = [];
     //cada vez que se cargue la clase crea 100 productos default
     this.index();
+    //conexion a la base de datos
+
+    this.pool = pool;
+    this.pool.on('error', (err)=> console.log(err));
   }
   /**
    * metodo index
@@ -32,10 +36,13 @@ class ProductsService{
    * metodo findAll
    * como al cargar la clase se alimenta
    * el array de productos
+   * se implementa conexion de datos con postgresql
    * solo retorna
    */
   async findAll(){
-    return this.products;
+    const strQuery = 'SELECT * FROM products';
+    const response = await this.pool.query(strQuery);
+    return response.rows;
   }
   /**
    * buscar elemento dentro del array
